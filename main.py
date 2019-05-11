@@ -1,4 +1,5 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram import Update
 import logging, view, dao, config
 from coin import CoinHandler
 
@@ -11,38 +12,38 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-def start(bot, update):
+def start(update: Update, context: CallbackContext):
     update.message.reply_text('Hi!')
 
 
-def help(bot, update):
+def help(update: Update, context: CallbackContext):
     update.message.reply_text(dao.get_instructions())
 
 
-def get_list_coins(bot, update):
+def get_list_coins(update: Update, context: CallbackContext):
     coins = CoinHandler()
     update.message.reply_text(view.coins_to_string(coins.listCoins))
 
 
-def get_categories(bot, update):
+def get_categories(update: Update, context: CallbackContext):
     coins = CoinHandler()
     update.message.reply_text(view.categories_to_string(coins.categories))
 
 
-def handler_plain_text(bot, update):
+def handler_plain_text(update: Update, context: CallbackContext):
     update.message.reply_text("Пожалуйста, воспользуйтесь командами из списка команд.\n"
                               "Чтобы получить список команд наберите /help")
 
 
-def error(bot, update, error):
+def error(update: Update, context: CallbackContext):
     """Log Errors caused by Updates."""
-    logger.warning('Update "%s" caused error "%s"', update, error)
+    logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
 def main():
     """Start the bot."""
     # Create the EventHandler and pass it your bot's token.
-    updater = Updater(token)
+    updater = Updater(token, use_context=True)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
