@@ -3,7 +3,7 @@ import json, config, urllib3
 
 def get_instructions():
     with open(config.env['FILE_HELP'], "r", encoding="utf-8") as file:
-        msg = file.read()
+        return file.read()
 
 
 def get_coins():
