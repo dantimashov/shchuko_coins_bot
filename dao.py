@@ -1,4 +1,4 @@
-import json, config
+import json, config, urllib3
 
 
 def get_instructions():
@@ -7,10 +7,6 @@ def get_instructions():
 
 
 def get_coins():
-    with open(config.env['FILE_COINS'], "r", encoding="utf-8") as file:
-        return json.load(file)
-
-
-def update(data):
-    with open(config.env['FILE_COINS'], "w", encoding="utf-8") as file:
-        json.dump(data, file)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    response = urllib3.PoolManager(cert_reqs='CERT_NONE', retries=False).request('GET', config.env['URL_COINS'])
+    return response.data.decode('cp1251')

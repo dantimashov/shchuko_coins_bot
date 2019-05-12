@@ -5,11 +5,5 @@ def categories_to_string(array):
     return result
 
 
-def coins_to_string(dct):
-    result = ""
-    for k in dct.keys():
-        result += k + ": \n"
-        for coin in dct.get(k):
-            result += coin + "\n"
-        result += "\n"
-    return result
+def check_result(coin_is_contained):
+    return "Монета уже есть" if coin_is_contained else "Монеты пока нету в списке. Сохраните ее, пожалуйста."

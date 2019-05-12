@@ -22,7 +22,7 @@ def help(update: Update, context: CallbackContext):
 
 def get_list_coins(update: Update, context: CallbackContext):
     coins = CoinHandler()
-    update.message.reply_text(view.coins_to_string(coins.listCoins))
+    update.message.reply_text('\n'.join(coins.listCoins))
 
 
 def get_categories(update: Update, context: CallbackContext):
@@ -30,9 +30,10 @@ def get_categories(update: Update, context: CallbackContext):
     update.message.reply_text(view.categories_to_string(coins.categories))
 
 
-def handler_plain_text(update: Update, context: CallbackContext):
-    update.message.reply_text("Пожалуйста, воспользуйтесь командами из списка команд.\n"
-                              "Чтобы получить список команд наберите /help")
+def check_coin(update: Update, context: CallbackContext):
+    coins = CoinHandler()
+    checking = coins.contains(update.message.text)
+    update.message.reply_text(view.check_result(checking))
 
 
 def error(update: Update, context: CallbackContext):
@@ -55,7 +56,7 @@ def main():
     dp.add_handler(CommandHandler("list_coins", get_list_coins))
 
     # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler(Filters.text, handler_plain_text))
+    dp.add_handler(MessageHandler(Filters.text, check_coin))
 
     # log all errors
     dp.add_error_handler(error)
